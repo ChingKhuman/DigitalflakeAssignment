@@ -2,40 +2,99 @@ const Product = require('../model/product')
 
 
 
-const createToken = (_id) => {
-    console.log('_id:', _id);
-    console.log('Secret:', process.env.SECRET);
-    return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '1d' })
-    
-}
 
 
-const loginUser = async (req, res) => {
-    const { email, password } = req.body
-
+const ProductCreateRoutes = async (request, response) => {
     try {
-        const user = await User.login(email, password)
-
-        const token = createToken(user._id)
-        res.status(200).json({ email, token })
+        if(
+            !request.body.name ||
+            !request.body.pack ||
+            !request.body.categoryID ||
+            !request.body.mrp ||
+            !request.body.status
+        ){
+            return response.status(400).send({
+                message: 'Send all required fields ',
+            })
+        }
+        const newProduct = {
+            name: request.body.name,
+            pack: request.body.pack,
+            categoryID: request.body.categoryID,
+            mrp: request.body.mrp,
+            status: request.body.status
+        };
+        const product = await Product.create(newProduct);
+        return response.status(201).send(product);
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        console.log(error.message);
+        response.status(500).send({message:error.message})
+       
     }
-
 }
 
-const signupUser = async (req, res) => {
-    const { email, password } = req.body
-
+const ProductGetRoutes = async (request, response) => {
     try {
-        const user = await User.signup(email, password)
-
-        const token = createToken(user._id)
-        res.status(200).json({ email, token })
+        const products = await Product.find({});
+        return response.status(200).json({
+            count: products.length,
+            data: products
+        });
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        console.log(error.message);
+        response.status(500).send({message: error.message});
     }
-
 }
 
-module.exports = { signupUser, loginUser }
+const ProductGetIdRoutes = async(request, response) => {
+    try {
+        const {id} = request.params;
+        const products = await Product.findById(id);
+        return response.status(200).json(products);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({message: error.message});
+    }
+}
+
+const ProductEditIdRoutes = async(request, response) => {
+    try {
+        if ( !request.body.name ||
+            !request.body.pack ||
+            !request.body.categoryID ||
+            !request.body.mrp ||
+            !request.body.status) {
+            return response.status(400).send({
+                message: 'Send all required fields:',
+            })
+        }
+        const {id} = request.params;
+        const result = await Product.findByIdAndUpdate(id, request.body)
+        
+        if(!result) {
+            return response.status(404).json({message: 'Product not found'})
+        }
+        return response.status(200).send({message: 'Product updated successfully'})
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({message: error.message})
+    }
+}
+
+const ProductDeleteRoutes = async(request, response) => {
+    try {
+       
+        const {id} = request.params;
+        const result = await Product.findByIdAndDelete(id, request.body)
+        
+        if(!result) {
+            return response.status(404).json({message: 'Product not found'})
+        }
+        return response.status(200).send({message: 'Product deleted successfully'})
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({message: error.message})
+    }
+}
+module.exports = { ProductCreateRoutes, ProductGetRoutes,
+ProductGetIdRoutes,ProductEditIdRoutes,ProductDeleteRoutes }

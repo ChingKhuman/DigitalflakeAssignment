@@ -17,6 +17,7 @@ import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import SidenavData from './SidenavData';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useLogout } from '../hooks/useLogout';
 
 export default function Navbar() {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -48,8 +49,10 @@ export default function Navbar() {
       setAnchorEl(event.currentTarget);
     };
   
+    const {logout} = useLogout()
     const handleClose = () => {
-      setAnchorEl(null);
+      
+      logout()
     };
 
 
@@ -104,9 +107,10 @@ export default function Navbar() {
                   horizontal: 'right',
                 }}
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
+                
               >
                 <MenuItem onClick={handleClose} sx={{ color: '#B13129' }}>Log Out</MenuItem>
+               
                
               </Menu>
             </div>

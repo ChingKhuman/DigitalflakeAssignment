@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import image289 from '../Images/image289.jpg'
 import axios from 'axios'
+import { useLogin } from '../Components/hooks/useLogin';
+
 
 
 
@@ -23,21 +25,23 @@ const defaultTheme = createTheme();
 export default function Login() {
 
     const [showPassword, setShowPassword] = React.useState(false);
-    const [email, setEmail]= React.useState()
-    const [password, setPassword] = React.useState()
+
+    const [email, setEmail]= React.useState('')
+    const [password, setPassword] = React.useState('')
+    const {login, error, isLoading} = useLogin()
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  axios.defaults.withCredentials = true;
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    axios.post('http://localhost:6000/user/login', {
-        email,password
-    }).then(res => console.log(res.data))
-    .catch(err => console.log(err))
-    
-  };
+
+ 
+  
+ 
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  await login(email, password)
+};
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -58,15 +62,17 @@ export default function Login() {
             Welcome to Digitalflake Admin
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-             
+            <Grid container spacing={2}>          
         
+          
+
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
                   id="email"
                   label="Email ID"
+                  value={email}
                   name="email"
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
@@ -80,6 +86,7 @@ export default function Login() {
         label="Password"
         type={showPassword ? 'text' : 'password'}
         id="password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
         autoComplete="new-password"
         InputProps={{
@@ -104,7 +111,10 @@ export default function Login() {
               </Grid>
              
             </Grid>
+
+
             <Button
+            disabled={isLoading}
               type="submit"
               fullWidth
               variant="contained"
@@ -112,10 +122,10 @@ export default function Login() {
             >
              Login
             </Button>
-            
+            {error && <div className='error'>{error}</div>}
           </Box>
         </Box>
- 
+          <Button variant="contained" > Go to Register</Button>
       </Container>
     </ThemeProvider>
   );

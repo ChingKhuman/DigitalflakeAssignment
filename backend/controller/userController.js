@@ -4,8 +4,8 @@ require('dotenv').config();
 
 
 const createToken = (_id) => {
-    console.log('_id:', _id);
-    console.log('Secret:', process.env.SECRET);
+    // console.log('_id:', _id);
+    // console.log('Secret:', process.env.SECRET);
     return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '1d' })
     
 }

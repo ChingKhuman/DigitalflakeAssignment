@@ -12,12 +12,12 @@ const productSchema = new Schema(
             required: true,
             unique: true,
         },
-        package: {
+        pack: {
             type: String,
             required: true,
         },
         categoryID: {
-            type: ObjectId,
+            type: String,
             required: true,
         },
         mrp: {
@@ -30,7 +30,7 @@ const productSchema = new Schema(
         },
         status: {
             type: Boolean,
-            required: true,
+            // required: true,
         },
     },
     {timestamps: true}

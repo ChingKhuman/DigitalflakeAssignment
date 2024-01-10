@@ -8,10 +8,17 @@ import Home from '../Body/Home'
 import { Box , useTheme} from '@mui/material'
 import CategoryCreate from '../Body/CategoryCreate'
 import ProductCreate from '../Body/ProductCreate'
+import { useAuthContext } from '../hooks/useAuthContext'
+
+import ProductId from '../Body/ProductId'
+import ProductDelete from '../Body/ProductDelete'
+import ShowProductDetails from '../Body/ShowProductDetails'
+
 
 function Header() {
 
   const theme = useTheme();
+  const {user} = useAuthContext()
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerOpen =()=> {
@@ -21,7 +28,9 @@ function Header() {
     setMobileOpen(mobileOpen)
   }
   return (
-    <div>
+    <div> 
+
+     
       <Navbar/>
       <Sidebar mobileOpern={mobileOpen}
       handleDrawerOpen={handleDrawerOpen}
@@ -33,11 +42,17 @@ function Header() {
         },
       }}>
     <Routes>
-    <Route path='/' element={<Home/>}/>
+    <Route path='' element={<Home/>}/>
     <Route path='/Category' element={<Category/>}/>
     <Route path='/Product' element={<Product/>}/>
+    <Route path='/Product/delete/:id' element={<ProductDelete/>}/>
+    <Route path='/Product/details/:id' element={<ShowProductDetails/>}/>
+    <Route path='/Product/edit/:id' element={<ProductId/>}/>
     <Route path='/CatCreate' element={<CategoryCreate/>}/>
-    <Route path='/ProCreate' element={<ProductCreate/>}/>
+    <Route path='/Product/create' element={<ProductCreate/>}/>
+    
+  
+    
     </Routes>
     </Box>
     

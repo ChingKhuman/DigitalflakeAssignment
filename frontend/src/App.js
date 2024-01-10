@@ -1,21 +1,31 @@
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Header from './Components/Header/Header'
 
 import Login from './Auth/Login'
+import { useAuthContext } from './Components/hooks/useAuthContext'
 
 
 
 function App() {
+  const {user} = useAuthContext()
   return (
-    // <BrowserRouter>
-    // <Header/>
-    // </BrowserRouter>
-    <Login/>
-
-    
-     
-  
+    <>
+{user && (
+ <BrowserRouter>
+ <Header/>
+ </BrowserRouter>
+)}
+{!user && (
+      <Login/>
+      )}
+   
+   <BrowserRouter>
+   <Routes>
+<Route path='/login' element={<Login/>}/>
+{/* <Route path='/register' element={<Register/>}/> */}
+</Routes></BrowserRouter>
+   </>
    
   )
 }

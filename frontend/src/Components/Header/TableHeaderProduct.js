@@ -59,7 +59,7 @@ function TableHeaderProduct() {
       
   const handleButtonClick = () => {
    
-    navigate('/ProCreate');
+    navigate('/Product/create');
   };
       
         const customStyle = {
